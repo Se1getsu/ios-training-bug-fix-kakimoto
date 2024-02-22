@@ -25,12 +25,15 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var maxTempLabel: UILabel!
     @IBOutlet weak var disasterLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    var isAlertShowing: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [unowned self] notification in
-            self.loadWeather(notification.object)
+            if !isAlertShowing {
+                self.loadWeather(notification.object)
+            }
         }
     }
     
@@ -80,6 +83,7 @@ class WeatherViewController: UIViewController {
                 }
             })
             self.present(alertController, animated: true, completion: nil)
+            isAlertShowing = true
         }
     }
 }
