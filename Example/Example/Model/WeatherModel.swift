@@ -50,12 +50,11 @@ class WeatherModelImpl: WeatherModel {
                 completion(.failure(WeatherError.unknownError))
                 return
             }
-            if let response = try? self.response(from: responseJSON) {
-                completion(.success(response))
-            }
-            else {
+            guard let response = try? self.response(from: responseJSON) else {
                 completion(.failure(WeatherError.jsonDecodeError))
+                return
             }
+            completion(.success(response))
         }
     }
 }
