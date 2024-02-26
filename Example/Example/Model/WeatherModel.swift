@@ -46,14 +46,15 @@ class WeatherModelImpl: WeatherModel {
             return
         }
         DispatchQueue.global().async {
-            if let responseJSON = try? YumemiWeather.syncFetchWeather(requestJSON) {
-                if let response = try? self.response(from: responseJSON) {
-                    completion(.success(response))
-                }
-                else {
-                    completion(.failure(WeatherError.jsonDecodeError))
-                }
+            guard let responseJSON = try? YumemiWeather.syncFetchWeather(requestJSON) else {
+                completion(.failure(WeatherError.unknownError))
+                return
             }
+            guard let response = try? self.response(from: responseJSON) else {
+                completion(.failure(WeatherError.jsonDecodeError))
+                return
+            }
+            completion(.success(response))
         }
     }
 }
